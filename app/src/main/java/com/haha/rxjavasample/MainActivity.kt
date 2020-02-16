@@ -3,10 +3,7 @@ package com.haha.rxjavasample
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import com.haha.rxjavasample.RxKotlin.Func1
-import com.haha.rxjavasample.RxKotlin.Observable
-import com.haha.rxjavasample.RxKotlin.OnSubscribe
-import com.haha.rxjavasample.RxKotlin.Subscriber
+import com.haha.rxjavasample.RxKotlin.*
 
 const val TAG = "RxKotlin"
 
@@ -24,23 +21,34 @@ class MainActivity : AppCompatActivity() {
         }).map(object : Func1<String, Int> {
 
             override fun call(t: String): Int {
+                Log.d(TAG, Thread.currentThread().name)
                 return t.toInt()
             }
-        }).subscribe(object : Subscriber<Int>() {
-            override fun onStart() {
-
-            }
-
-            override fun onNext(t: Int) {
-                Log.d(TAG, t.toString())
-            }
-
-            override fun onComplete() {
-            }
-
-            override fun onError(t: Throwable) {
-            }
-
         })
+            .subscribeOn(Schedulers.io())
+            .map(object : Func1<Int, String> {
+
+                override fun call(t: Int): String {
+                    Log.d(TAG, Thread.currentThread().name)
+                    return (t + 2).toString()
+                }
+
+            }).subscribe(object : Subscriber<String>() {
+                override fun onStart() {
+
+                }
+
+                override fun onNext(t: String) {
+                    Log.d(TAG, Thread.currentThread().name)
+                    Log.d(TAG, t)
+                }
+
+                override fun onComplete() {
+                }
+
+                override fun onError(t: Throwable) {
+                    Log.d(TAG, t.message)
+                }
+            })
     }
 }
