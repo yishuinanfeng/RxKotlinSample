@@ -10,8 +10,8 @@ class Schedulers {
             return NewThreadScheduler(RxThreadFactory())
         }
 
-        fun main(){
-
+        fun main(): Scheduler {
+            return MainThreadScheduler()
         }
     }
 }

@@ -23,4 +23,16 @@ class Observable<T>(val onSubscribe: OnSubscribe<T>) {
     fun subscribeOn(scheduler: Scheduler): Observable<T> {
         return create(OperatorSubscribeOn(scheduler, this))
     }
+
+    fun observeOn(scheduler: Scheduler): Observable<T> {
+        return lift(OperatorObserveOn(scheduler))
+    }
+
+    /**
+     * @param operator:从T转换到R
+     * @return 一个持有R的Observable
+     */
+    fun <R> lift(operator: Operator<R, T>): Observable<R> {
+        return create(OnSubscribeLift(onSubscribe, operator))
+    }
 }

@@ -44,7 +44,7 @@ class OperatorSubscribeOn<T>(val scheduler: Scheduler, val source: Observable<T>
             }
         }
 
-        //这个方法会在Worker指定的线程执行
+        //这个方法会在Worker指定的线程执行，在从下往上包装Subscriber的过程中切换到另一个线程
         override fun call() {
             val src = source
             //这里RxJava源码也是置为空的，我的理解是执行完该方法后，就可以释放对Observable的持有了

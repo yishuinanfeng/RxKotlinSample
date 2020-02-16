@@ -27,7 +27,7 @@ class NewThreadWorker(threadFactory: ThreadFactory) : Scheduler.Worker(), Subscr
     }
 
     override fun isSubscribed(): Boolean {
-        //暂时没处理
+        //todo 暂时没处理
         return true
     }
 }

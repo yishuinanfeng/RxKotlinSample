@@ -3,6 +3,9 @@ package com.haha.rxjavasample
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import com.haha.rxjavasample.RxKotlin.*
 
 const val TAG = "RxKotlin"
@@ -26,6 +29,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
             .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.main())
             .map(object : Func1<Int, String> {
 
                 override fun call(t: Int): String {
@@ -50,5 +54,6 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, t.message)
                 }
             })
+
     }
 }

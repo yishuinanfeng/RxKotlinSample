@@ -2,7 +2,9 @@ package com.haha.rxjavasample.RxKotlin
 
 abstract class Subscriber<T> : Observer<T>, Subscription {
 
-    abstract fun onStart()
+    open fun onStart(){
+
+    }
 
     override fun unSubscribe() {
 
