@@ -8,6 +8,9 @@ class Observable<T>(val onSubscribe: OnSubscribe<T>) {
         }
     }
 
+    /**
+     * 调用onSubscribe.call，包装Subscriber
+     */
     fun subscribe(subscriber: Subscriber<T>): Subscriber<T> {
         onSubscribe.call(subscriber)
         return subscriber

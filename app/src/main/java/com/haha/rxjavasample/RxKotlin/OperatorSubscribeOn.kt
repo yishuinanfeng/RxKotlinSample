@@ -10,6 +10,7 @@ class OperatorSubscribeOn<T>(val scheduler: Scheduler, val source: Observable<T>
     override fun call(s: Subscriber<in T>) {
         val worker = scheduler.createWorker()
         val subscribeOnSubscriber = SubscribeOnSubscriber(s, worker, source)
+        //将source的subscribe放到子线程
         worker.schedule(subscribeOnSubscriber)
     }
 

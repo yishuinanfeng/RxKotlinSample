@@ -19,6 +19,8 @@ class OperatorObserveOn<T>(val scheduler: Scheduler) : Operator<T, T> {
         //有界阻塞队列，容量128是RxJava默认容量
         private val queue = ArrayBlockingQueue<T>(128)
         private val worker = scheduler.createWorker()
+        private var throwable:Throwable? = null
+        private var isComplete:Boolean = false
 
         override fun onNext(t: T) {
             if (!queue.offer(t)) {
@@ -31,17 +33,30 @@ class OperatorObserveOn<T>(val scheduler: Scheduler) : Operator<T, T> {
         }
 
         override fun onComplete() {
-            child.onComplete()
+            isComplete = true
+            worker.schedule(this)
+
         }
 
         override fun onError(t: Throwable) {
-            child.onError(t)
+            throwable = t
+            worker.schedule(this)
         }
 
         //在指定的线程中执行,在从上往下执行onNext的过程中切换到另一个线程
         override fun call() {
             var isContinue = true
             while (isContinue) {
+                if (isComplete){
+                    child.onComplete()
+                    isContinue = false
+                }
+
+                throwable?.let {
+                    child.onError(it)
+                    isContinue = false
+                }
+
                 val t = queue.poll()
                 if (t == null) {
                     isContinue = false
